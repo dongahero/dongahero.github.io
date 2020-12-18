@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>test</title>
+</head>
+<body>
+    
+    <div id="iconholder">
+    <div id="icon-wrap">
+        </div>
+    </div>
+    
+    <script>
+    
+  // (Start) make Victim Card
+  var makeVitimInfo = function(i) {
+    if (victimValues[i].noRt == false) {
+      return [victimValues[i].name.length < 2 ? victimValues[i].name + "○○" : victimValues[i].name, String(victimValues[i].age == "미상" || victimValues[i].age == "-" || victimValues[i].age == "" ? "나이 미상" : victimValues[i].age + "세")].join('<span>I</span>');
+    } else {
+      var infoArr = [victimValues[i].name.length < 2 ? victimValues[i].name + "○○" : victimValues[i].name, String(victimValues[i].age == "미상" || victimValues[i].age == "-" || victimValues[i].age == "" ? "나이 미상" : victimValues[i].age + "세")];
+      if (victimValues[i].emp1 != "" && victimValues[i].emp1 != "-") {
+        infoArr.push(victimValues[i].emp1);
+      }
+      if (victimValues[i].emp2 != "" && victimValues[i].emp2 != "-") {
+        infoArr.push(victimValues[i].emp2);
+      }
+	  if (victimValues[i].occuType != "" && victimValues[i].occuType != "-") {
+        infoArr.push(victimValues[i].occuType);
+      }
+      if (victimValues[i].skill != "" && victimValues[i].skill != "-") {
+        var skillStr = victimValues[i].skill;
+        if (victimValues[i].careerY == "") {} else {
+          skillStr = skillStr + "(경력" + victimValues[i].careerY + "년)";
+        }
+        infoArr.push(skillStr);
+      }	  
+      return infoArr.join('<span>I</span>');
+    }
+  }
+
+  var makeCard = function(i) {
+    $(".accident-card .acc-date").html("<em class='head'>재해일시</em>" + victimValues[i].date + " " + victimValues[i].time);
+    var p_info = makeVitimInfo(i)
+    $(".accident-card .victim-info").html("<em class='head'>재해자</em>" + p_info);
+    $(".accident-card .victim-info-immigrant").html("");
+    if (victimValues[i].immigrant == "" || victimValues[i].immigrant == undefined) {
+      $(".accident-card .victim-info-immigrant").hide();
+    } else if (victimValues[i].immigrant != "") {
+      $(".accident-card .victim-info-immigrant").show();
+      if (victimValues[i].illegal != "") {
+        $(".accident-card .victim-info-immigrant").html("* 재해자는 미등록 이주노동자(" + victimValues[i].immigrant + ")");
+      } else {
+        $(".accident-card .victim-info-immigrant").html("* 재해자는 이주노동자(" + victimValues[i].immigrant + ")");
+      }
+    }
+    $(".accident-card .acc-type").html("사고유형 - " + victimValues[i].accType);
+    $(".accident-card .full-des").html(victimValues[i].accSummary);
+
+		$(".accident-card .main").html(victimValues[i].emp1Name);
+		$(".accident-card .sub").html(victimValues[i].emp2Name);
+
+    if (victimValues[i].act == "-"|| victimValues[i].indict == "#N/A") {
+      $(".accident-card .act-info").hide();
+    } else {
+      $(".accident-card .act-info").show();
+      $(".accident-card .act-info").html("<em class='head'>행정조치</em>" + victimValues[i].act);
+    }
+
+    if (victimValues[i].indict == "-" || victimValues[i].indict == "#N/A") {
+      $(".accident-card .indictment-info").hide();
+    } else {
+      $(".accident-card .indictment-info").show();
+      $(".accident-card .indictment-info").html("<em class='head'>송치의견</em>" + victimValues[i].indict);
+    }
+
+    $(".accident-card .card-wrap .acc-due .due-list").html("");
+    if (victimValues[i].noRt == false) {
+      $(".acc-due").hide();
+    } else {
+      $(".acc-due").show();
+      for (v = 0; v < victimValues[i].accCause.length; v++) {
+        $(".accident-card .card-wrap .acc-due .due-list").append("<p class='each-due'>" + aCode[victimValues[i].accCause[v]] + "</p>")
+      }
+    }
+    $("#due").scrollTop(0);
+    if (victimValues[i].noRt == false || victimValues[i].noPhoto == true) {
+		$(".acc-photo-mobile-holder").hide();
+		$(".accident-card .acc-photo").hide();
+    } else {
+		if(isMobile==true){
+			$(".acc-photo-mobile-holder").show();
+			$(".accident-card .acc-photo-mobile").show();
+		}else{
+			$(".accident-card .acc-photo-pc").show();
+		}
+      $(".accident-card .acc-photo").find("img").attr("src", imgURL + "acc-photo/" + victimValues[i].id + ".jpg");
+    }
+    if (isMobile == false) {
+      var cardPosTop = (screenHeight < 750) && ((screenHeight - $(".accident-card").height()) / 2) || (screenHeight - $(".accident-card").height()) / 2 - 50;
+      $(".accident-card").css({
+        "top": cardPosTop
+      });
+    } else {
+      $(".accident-card").css({
+        "top": "0px"
+      });
+    }
+
+  };
+
+  var accPhotoAnimating = false;
+  $(".acc-photo").on("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (accPhotoAnimating == false) {
+      accPhotoAnimating = true;
+      $(this).addClass("acc-photo-fixed");
+      var $img = $(this).children("img");
+      if (isMobile == true) {
+       $(".acc-photo-mobile").css({
+          "width": "85%",
+          "height": "auto",
+          "max-height": "80vh"
+        });
+        $img.css({
+          "width": "100%",
+          "height": "auto"
+        });
+        $(".acc-photo-fixed").animate({
+          "top": (screenHeight - $img.height()) / 2,
+          "right": "7.5%"
+        }, 500, "swing", function() {
+			$(".acc-photo-mobile-back").show();
+            accPhotoAnimating = false;
+        });
+      } else {
+        if ($img.width() <= $img.height()) {
+          $(".acc-photo").css({"width": "auto", "height": "80vh"});
+          $img.css({"height": "100%","width": "auto"});
+          $(".acc-photo-fixed").animate({"top": (screenHeight - $img.height()) / 2,"right": (screenWidth - $img.width()) / 2}, 500, "swing", function(){
+            $(".acc-photo-back").show();
+            accPhotoAnimating = false;
+          });
+        } else {
+          $(".acc-photo").css({"width": "700px"});
+          $img.css({"width": "100%","height": "auto"});
+          $(".acc-photo-fixed").animate({"top": (screenHeight - $img.height()) / 2,"right": (screenWidth - 700) / 2}, 500, "swing", function(){
+            $(".acc-photo-back").show();
+            accPhotoAnimating = false;
+          });
+        }
+      }
+    }
+  });
+
+  $(".acc-photo-back, .acc-photo-mobile-back").on("click", function() {
+    if (accPhotoAnimating == false) {
+      $(this).hide();
+      $(".acc-photo").removeClass("acc-photo-fixed");
+      if (isMobile == true) {
+        $(".acc-photo-mobile").css({
+          "width": "300px",
+          "height": "auto",
+		  "top": "auto",
+          "right": "auto"
+        });
+      } else {
+        $(".acc-photo").css({
+          "width": "200px",
+          "height": "auto",
+          "top": "-10px",
+          "right": "-10px"
+        });
+      }
+      $(".acc-photo img").css({
+        "width": "100%"
+      });
+    }
+  });
+
+  $(".close-btn, .card-back").on("click", function() {
+    if (accPhotoAnimating == false) {
+	  $(window).scrollTop(lastBodyScroll);
+      $("body").removeClass("fixed");
+      $(".card-back").hide();
+      $(".accident-card").hide();
+      if (isMobile == true) {
+        $(".accident-card-ani").hide();
+      } else {
+        $(".accident-card-ani").css({
+          "opacity": "0"
+        });
+      }
+    }
+  });
+
+
+  if (isMobile == true) {
+    $(".card-back").on("touchstart", function() {
+      if (accPhotoAnimating == false) {
+        $("body").removeClass("fixed");
+        $(".card-back").hide();
+        $(".accident-card").hide();
+        if (isMobile == true) {
+          $(".accident-card-ani").hide();
+        } else {
+          $(".accident-card-ani").css({
+            "opacity": "0"
+          });
+        }
+      }
+    });
+  }
+
+  // (End) make Victim Card
+        
+    </script>
+
+</body>
+</html>
