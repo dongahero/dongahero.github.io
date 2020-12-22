@@ -1,0 +1,1 @@
+var paragraphs = document.getElementbyTagName("p");
