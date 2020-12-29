@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Leaves</title>
+    
+    <style>
+    
+        .aut-bg {
+	 background: white;
+	 background-repeat: no-repeat;
+	 height: 100vh;
+	 padding-top: 20px;
+	 overflow-x: hidden;
+}
+ .leaf {
+	 width: 30px;
+	 height: 18px;
+	 background-image: linear-gradient(#726005, #68d968);
+	 border-radius: 4% 50% 40%;
+	 margin-left: 30px;
+	 position: relative;
+	 display: inline-block;
+	 top: -50px;
+	 left: 200px;
+	 animation: fall 13s infinite backwards;
+}
+ .leaf:nth-of-type(2n) {
+	 animation-delay: 1.7s;
+	 animation-duration: 7s;
+}
+ .leaf:nth-of-type(4n) {
+	 animation-delay: 0.5s;
+}
+ .leaf:nth-of-type(3n) {
+	 animation-delay: 3s;
+}
+ .leaf:nth-of-type(5n) {
+	 animation-delay: 2.4s;
+	 animation-duration: 9s;
+}
+ .leaf::before {
+	 width: 1px;
+	 height: 20px;
+	 content: '';
+	 display: block;
+	 background: #fff;
+	 transform: rotate(115deg);
+	 position: absolute;
+	 left: 14px;
+	 top: -1px;
+}
+ .leaf::after {
+	 content: '';
+	 display: block;
+	 width: 0;
+	 height: 0;
+	 position: absolute;
+	 top: 14px;
+	 transform: rotate(20deg) skew(20deg);
+	 left: 30px;
+	 border-top: 1px solid #0a0;
+	 border-left: 7px solid transparent;
+}
+ @keyframes fall {
+	 0% {
+		 transform: translate3d(10px, 0, 10px) rotate(90deg);
+		 opacity: 1;
+	}
+	 100% {
+		 transform: translate3d(-400px, 110vh, 0) rotate(0deg);
+		 opacity: 0.1;
+	}
+}
+ 
+    
+    </style>
+</head>
+<body>
+
+    
+
+<div class="aut-bg">
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+  <div class="leaf"></div>
+</div>
+
+    
+</body>
+</html>
